@@ -54,7 +54,11 @@ elif mode == "Image Only":
     image_data = image_uploader()
 
 # --- Submit and stream response ---
-if st.button("Submit"):
+button_label = "Submit"
+if mode == "Image Only":
+    button_label = "Tell me about this image"
+
+if st.button(button_label):
     if mode == "Text Only" and not user_text:
         st.warning("Please enter a prompt.")
     elif mode == "Text + Image" and not (user_text or image_data):
