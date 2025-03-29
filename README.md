@@ -25,8 +25,11 @@ This is a Streamlit-based AI assistant that uses Google's **Gemini models** (via
 
 ## 🧩 File Structure
 gemini_app/ 
+
 app.py # Main Streamlit interface 
+
 gemini_utils.py # Gemini model setup and API interaction 
+
 ui_utils.py # UI elements: text input, image upload
 
 
