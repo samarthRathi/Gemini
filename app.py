@@ -11,6 +11,9 @@ st.title("💬 Chat with Gemini")
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
+if "last_response" not in st.session_state:
+    st.session_state.last_response = None
+
 # Sidebar: Gemini model info
 st.sidebar.header("ℹ️ Gemini Models Available")
 
@@ -79,19 +82,31 @@ if st.button(button_label):
                     response_placeholder.text(response_text)
 
             # Save chat
-            st.session_state.chat_history.append({
+            st.session_state.last_response = {
                 "question": user_text,
                 "image": image_data,
-                "response": response_text
-            })
+                "response": response_text,
+            }
 
-# --- Chat history ---
-st.markdown("---")
-st.subheader("🕘 Chat History")
-
-for i, chat in enumerate(reversed(st.session_state.chat_history), 1):
-    st.markdown(f"**Q{i}:** {chat['question']}")
-    if chat['image']:
-        st.image(chat['image'], width=200, caption="Uploaded Image")
-    st.markdown(f"**A{i}:**\n{chat['response']}")
+# --- Save Button (only after a new response is generated) ---
+if st.session_state.last_response:
     st.markdown("---")
+    if st.button("✅ Save This Chat to History"):
+        st.session_state.chat_history.append(st.session_state.last_response)
+        st.session_state.last_response = None
+        st.success("Chat saved to history.")
+
+# --- Chat History Toggle ---
+show_history = st.checkbox("📜 Show Chat History")
+
+if show_history and st.session_state.chat_history:
+    st.markdown("---")
+    st.subheader("🕘 Past Conversations")
+
+    for i, chat in enumerate(reversed(st.session_state.chat_history), 1):
+        st.markdown(f"**Q{i}:** {chat['question']}")
+        if chat['image']:
+            st.image(chat['image'], width=200, caption="Uploaded Image")
+        st.markdown(f"**A{i}:**\n{chat['response']}")
+        st.markdown("---")
+
