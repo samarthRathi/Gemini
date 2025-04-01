@@ -1,4 +1,4 @@
-# 🧠 Gemini Vision Task Assistant
+# 🧠 Gemini Vision - Document Scanning Task Assistant
 
 A user-friendly Streamlit application powered by **Google's Gemini Vision (Gemini 1.5 Flash)** that enables you to upload images and extract meaningful, structured information based on a custom-defined task — like invoice parsing, table extraction, or general document analysis.
 
