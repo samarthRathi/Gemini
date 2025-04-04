@@ -1,13 +1,37 @@
 import pandas as pd
 from io import BytesIO
-from docx import Document
+from openpyxl.styles import Font
+from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl import Workbook
+import re
+
+def clean_text(text):
+    # """Remove markdown symbols like *, _, etc."""
+    return re.sub(r"[*_`]", "", text).strip()
 
 def convert_to_excel(text):
+    # Extract key-value pairs
     lines = [line for line in text.split("\n") if ":" in line]
     data = [line.split(":", 1) for line in lines]
-    df = pd.DataFrame(data, columns=["Field", "Value"])
+    cleaned_data = [[clean_text(k), clean_text(v)] for k, v in data]
+
+    df = pd.DataFrame(cleaned_data, columns=["Field", "Value"])
+
+    # Create workbook
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Extracted Data"
+
+    # Write data to sheet
+    for r_idx, row in enumerate(dataframe_to_rows(df, index=False, header=True), 1):
+        for c_idx, value in enumerate(row, 1):
+            cell = ws.cell(row=r_idx, column=c_idx, value=value)
+            # Set font to Calibri, not bold or italic
+            cell.font = Font(name='Calibri', bold=False, italic=False)
+
+    # Save to BytesIO for download
     output = BytesIO()
-    df.to_excel(output, index=False)
+    wb.save(output)
     output.seek(0)
     return output
 
