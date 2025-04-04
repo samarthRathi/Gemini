@@ -41,3 +41,11 @@ class GeminiVisionApp:
             prompt_chain.append(image_parts[0])
         response = self.model.generate_content(prompt_chain)
         return response.text
+
+    def moderate_response(self, text):
+        moderation_prompt = """
+        Does the following content contain any unethical, harmful, offensive, or sensitive information?
+        Just answer Yes or No.
+        """
+        response = self.model.generate_content([moderation_prompt, text])
+        return "yes" in response.text.strip().lower()

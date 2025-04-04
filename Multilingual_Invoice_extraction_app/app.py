@@ -6,16 +6,16 @@ from PIL import Image
 from gemini_core import GeminiVisionApp
 from utils import convert_to_excel, convert_to_word
 
-# Page setup
 st.set_page_config(page_title="Gemini Vision App", page_icon="🧠", layout="centered")
 st.title("🧠 Gemini Vision Task Assistant")
 
-# Task input
 st.header("1. Define Your Assistant")
 user_task_name = st.text_input("Who should the model act as? (e.g., invoice parser, form analyzer):")
 
 if "result" not in st.session_state:
     st.session_state.result = None
+if "unethical_flag" not in st.session_state:
+    st.session_state.unethical_flag = False
 
 if user_task_name:
     app = GeminiVisionApp(task_name=user_task_name)
@@ -38,10 +38,15 @@ if user_task_name:
             else:
                 with st.spinner("Generating response with Gemini..."):
                     result = app.generate_response(user_input, image_data)
-                    st.session_state.result = result
+                    is_unethical = app.moderate_response(result)
+                    st.session_state.result = None if is_unethical else result
+                    st.session_state.unethical_flag = is_unethical
 
-# Show results and export
-if st.session_state.result:
+# Show result or warning
+if st.session_state.unethical_flag:
+    st.subheader("⚠️ Warning")
+    st.error("Gemini detected potentially unethical or inappropriate content. Export is disabled for safety.")
+elif st.session_state.result:
     st.subheader("💡 Gemini's Response")
     st.write(st.session_state.result)
 
@@ -54,7 +59,6 @@ if st.session_state.result:
     elif export_format == "Word (.docx)":
         file_data = convert_to_word(st.session_state.result)
         st.download_button("📥 Download Word", file_data, file_name="extracted_data.docx")
-
 else:
     if user_task_name:
         st.info("📝 Submit a prompt and image to generate a response.")
