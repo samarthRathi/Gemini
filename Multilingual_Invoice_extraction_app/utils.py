@@ -5,6 +5,9 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl import Workbook
 from docx import Document
 import re
+import json
+import os
+from datetime import datetime
 
 def clean_text(text):
     return re.sub(r"[*_`\[\]]", "", text).strip()
@@ -12,7 +15,7 @@ def clean_text(text):
 def censor_text(text):
     flagged_words = ["fraud", "violence", "abuse", "drugs"]
     for word in flagged_words:
-        text = re.sub(fr"\\b{word}\\b", "[REDACTED]", text, flags=re.IGNORECASE)
+        text = re.sub(fr"\b{word}\b", "[REDACTED]", text, flags=re.IGNORECASE)
     return text
 
 def convert_to_excel(text):
@@ -41,3 +44,23 @@ def convert_to_word(text):
     doc.save(word_output)
     word_output.seek(0)
     return word_output
+
+def log_user_interaction(user_id, prompt, image_name, response, unethical):
+    log_entry = {
+        "timestamp": datetime.now().isoformat(),
+        "user_id": user_id,
+        "prompt": prompt,
+        "image_name": image_name,
+        "response_summary": response[:300],
+        "flagged_unethical": unethical
+    }
+    os.makedirs("logs", exist_ok=True)
+    log_path = os.path.join("logs", f"{user_id}_log.jsonl")
+    with open(log_path, "a") as f:
+        f.write(json.dumps(log_entry) + "\n")
+
+def verify_user(username, password):
+    valid_users = {
+        "testuser123": "123456"
+    }
+    return valid_users.get(username) == password
