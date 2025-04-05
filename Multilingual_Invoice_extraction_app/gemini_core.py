@@ -40,7 +40,7 @@ class GeminiVisionApp:
         if image_parts[0]:
             prompt_chain.append(image_parts[0])
         response = self.model.generate_content(prompt_chain)
-        return response.text
+        return response.text if hasattr(response, 'text') else str(response)
 
     def moderate_response(self, text):
         moderation_prompt = """
