@@ -1,0 +1,21 @@
+{
+  "session_start": "2025-04-05T18:35:22.293320",
+  "user_id": "testuser123",
+  "interactions": [
+    {
+      "timestamp": "2025-04-05T18:36:33.678563",
+      "prompt": "Extract information from the uploaded invoice",
+      "image_name": "invoice-template-us-neat-750px.png",
+      "response_summary": "Here's a structured representation of the invoice information:\n\n**Invoice Information:**\n\n* **Invoice Number:** US-001\n* **Invoice Date:** 11/02/2019\n* **Due Date:** 26/02/2019\n* **P.O. Number:** 2312/2019\n\n**Bill To:**\n\n* **Name:** John Smith\n* **Address:** 2 Court Square, New York, NY 12210\n\n**Shi",
+      "flagged_unethical": false
+    },
+    {
+      "timestamp": "2025-04-05T18:37:14.904988",
+      "prompt": "what is the amount with and without sales tax and any improvements to increase the sales",
+      "image_name": "invoice-template-us-neat-750px.png",
+      "response_summary": "Amount with sales tax: $154.06\nAmount without sales tax: $145.00\n\nImprovements to increase sales:\n\n* **Offer bundled services:** Package brake cable replacement with pedal arm replacement at a discounted price.\n* **Targeted advertising:** Focus marketing efforts on cycling enthusiasts or mechanics i",
+      "flagged_unethical": false
+    }
+  ],
+  "session_end": "2025-04-05T18:37:24.706488"
+}

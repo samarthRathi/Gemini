@@ -4,7 +4,7 @@ load_dotenv()
 import streamlit as st
 from PIL import Image
 from gemini_core import GeminiVisionApp
-from utils import convert_to_excel, convert_to_word, log_user_interaction, verify_user
+from utils import convert_to_excel, convert_to_word, verify_user, start_session_log, end_session_log, add_session_interaction
 
 st.set_page_config(page_title="Gemini Vision App", page_icon="🧠", layout="centered")
 st.title("🧠 Gemini Vision Task Assistant")
@@ -14,6 +14,14 @@ with st.sidebar:
     username = st.text_input("User ID")
     password = st.text_input("Password", type="password")
     login_btn = st.button("Login")
+    if st.session_state.get("authenticated"):
+        if st.button("Logout"):
+            end_session_log(st.session_state.username)
+            st.session_state.authenticated = False
+            st.session_state.username = ""
+            st.session_state.result = None
+            st.session_state.unethical_flag = False
+            st.success("Logged out successfully.")
 
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
@@ -23,6 +31,7 @@ if login_btn:
         st.session_state.authenticated = True
         st.session_state.username = username
         st.success("Login successful!")
+        start_session_log(username)
     else:
         st.session_state.authenticated = False
         st.error("Invalid credentials. Try again.")
@@ -43,7 +52,7 @@ if st.session_state.authenticated:
         user_input = st.text_area("What would you like me to do with the image?")
         uploaded_image = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
 
-        if uploaded_image and st.checkbox("Show uploaded image", value=True):
+        if uploaded_image and st.checkbox("Show uploaded image", value=False):
             st.image(Image.open(uploaded_image), caption="Uploaded Image", use_column_width=True)
 
         if st.button("Submit"):
@@ -61,7 +70,7 @@ if st.session_state.authenticated:
                         st.session_state.result = None if is_unethical else result
                         st.session_state.unethical_flag = is_unethical
 
-                        log_user_interaction(
+                        add_session_interaction(
                             user_id=st.session_state.username,
                             prompt=user_input,
                             image_name=uploaded_image.name if uploaded_image else "None",
