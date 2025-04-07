@@ -68,7 +68,7 @@ streamlit run app.py
 - Add RAG enhancements using LangChain's `RetrievalQA`
 
 ## 🙋‍♂️ Author
-Built by [Your Name] — Learning RAG with Gemini and LangChain.
+Built by Samarth Rathi — Learning RAG with Gemini and LangChain.
 
 ---
 **Note**: You must have access to Google's Generative AI APIs to run this project.
