@@ -70,8 +70,5 @@ streamlit run app.py
 ## 🙋‍♂️ Author
 Built by [Your Name] — Learning RAG with Gemini and LangChain.
 
-## 🪪 License
-This project is open-source and free to use under the MIT License.
-
 ---
 **Note**: You must have access to Google's Generative AI APIs to run this project.
