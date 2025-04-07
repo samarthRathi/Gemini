@@ -7,3 +7,5 @@ chromadb
 pandas 
 openpyxl 
 python-docx
+faiss-cpu
+langchain_google_genai
